@@ -61,7 +61,8 @@ extern "system" fn hk_get_tick_count() -> DWORD {
         let found = sig.scan_ptr(start as *mut u8, end as *mut u8);
 
         if let Some(addr) = found {
-            *addr.add(7) = 0x85;
+            *addr.add(6) = 0x90; // nop
+            *addr.add(7) = 0xE9; // jmp
 
             let count = COUNT.fetch_add(1, std::sync::atomic::Ordering::SeqCst) + 1;
             if count >= MAX_COUNT {
